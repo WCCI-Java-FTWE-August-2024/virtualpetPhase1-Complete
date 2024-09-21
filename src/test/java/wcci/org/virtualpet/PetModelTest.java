@@ -37,6 +37,11 @@ class PetModelTest {
         public String speak() {
             return "Test pet speaks!";
         }
+
+        @Override
+        public long getId() {
+          return 1;
+        }
     }
 
     /**
@@ -104,7 +109,7 @@ class PetModelTest {
         pet.setHealth(-10);
         assertEquals(0, pet.getHealth()); // Check health lower bound
         assertTrue(pet.isDead()); // Check death status
-        assertEquals(DeathBy.Disease, pet.getDied()); // Check death reason
+        assertEquals(DeathBy.Disease, pet.getDeathBy()); // Check death reason
     }
 
     /**
@@ -121,7 +126,7 @@ class PetModelTest {
         pet.setHappiness(-10);
         assertEquals(0, pet.getHappiness()); // Check happiness lower bound
         assertTrue(pet.isDead()); // Check death status
-        assertEquals(DeathBy.Loneliness, pet.getDied()); // Check death reason
+        assertEquals(DeathBy.Loneliness, pet.getDeathBy()); // Check death reason
     }
 
     /**
@@ -135,7 +140,7 @@ class PetModelTest {
         pet.setThirst(150);
         assertEquals(100, pet.getThirst()); // Check hunger upper bound
         assertTrue(pet.isDead()); // Check death status
-        assertEquals(DeathBy.Thirst, pet.getDied()); // Check death reason
+        assertEquals(DeathBy.Thirst, pet.getDeathBy()); // Check death reason
 
         pet.setThirst(-10);
         assertEquals(0, pet.getThirst()); // Check hunger lower bound
@@ -152,7 +157,7 @@ class PetModelTest {
         pet.setHungery(150);
         assertEquals(100, pet.getHungery()); // Check hunger upper bound
         assertTrue(pet.isDead()); // Check death status
-        assertEquals(DeathBy.Starvation, pet.getDied()); // Check death reason
+        assertEquals(DeathBy.Starvation, pet.getDeathBy()); // Check death reason
 
         pet.setHungery(-10);
         assertEquals(0, pet.getHungery()); // Check hunger lower bound

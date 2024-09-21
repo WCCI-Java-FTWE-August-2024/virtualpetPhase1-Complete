@@ -11,6 +11,16 @@ public enum PetType {
     /**
      * Represents a dog.
      */
-    DOG
+    DOG,
+
+     /**
+     * Represents a robotic cat.
+     */
+    ROBOTIC_CAT,
+
+    /**
+     * Represents a dog.
+     */
+    ROBOTIC_DOG
 }
 

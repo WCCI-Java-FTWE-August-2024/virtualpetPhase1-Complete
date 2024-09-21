@@ -1,24 +1,22 @@
 package wcci.org.virtualpet.Models;
 
+
+import jakarta.persistence.MappedSuperclass;
 import wcci.org.virtualpet.Enums.*;
-import wcci.org.virtualpet.Exceptions.ValidateException;
+import wcci.org.virtualpet.Interfaces.PetInterface;
 
 /**
  * The PetModel class represents a virtual pet with various attributes such as
  * name, type, age, health, happiness, and hunger.
  * It includes methods to manipulate and check the state of the pet.
  */
-public abstract class PetModel {
-    private static long idCounter = 1; // Counter to generate unique IDs for pets
-    private long id; // Unique identifier for the pet
-    private String name; // Name of the pet
-    private PetType type; // Type of the pet (e.g., DOG, CAT)
-    private int age; // Age of the pet
+@MappedSuperclass
+public abstract class PetModel extends CommonModel implements PetInterface {
+
     private int health; // Health level of the pet (0-100)
     private int happiness; // Happiness level of the pet (0-100)
     private int hungery; // Hunger level of the pet (0-100)
     private int thirst; // Thirst level of the pet (0-100)
-    private DeathBy died; // Reason for the pet's death, if any
 
     /**
      * Constructor to initialize a new PetModel instance.
@@ -28,106 +26,11 @@ public abstract class PetModel {
      * @param age  The age of the pet.
      */
     public PetModel(String name, PetType type, int age) {
-        this.name = name;
-        this.type = type;
-        this.age = age;
-        this.health = 0; // Initialize health to 0
-        this.happiness = 0; // Initialize happiness to 0
-        this.hungery = 0; // Initialize hunger to 0
-        this.thirst = 0;
-        this.id = idCounter++; // Assign unique ID to the pet
-        this.died = DeathBy.None; // Initialize died status to None
-    }
-
-    /**
-     * Gets the cause of death
-     * 
-     * @return DeathBy Enum
-     */
-    public DeathBy getDied() {
-        return died;
-    }
-
-    /**
-     * Gets the unique identifier of the pet.
-     *
-     * @return The pet's ID.
-     */
-    public long getId() {
-        return id;
-    }
-
-    /**
-     * Checks if the pet is dead.
-     *
-     * @return True if the pet is dead, otherwise false.
-     */
-    public boolean isDead() {
-        return !this.died.equals(DeathBy.None);
-    }
-
-    /**
-     * Gets the name of the pet.
-     *
-     * @return The pet's name.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name of the pet.
-     *
-     * @param name The new name of the pet.
-     * @throws ValidateException
-     */
-    public void setName(String name) throws ValidateException {
-        if (name == null || name.length() == 0) {
-            throw new ValidateException("Invalid length for name, please try again\nName can not be empty");
-        } else if (name.length() > 50) {
-            throw new ValidateException("Invalid length for name, please try again\nmust be less then 50 characters");
-        }
-        this.name = name;
-    }
-
-    /**
-     * Gets the type of the pet.
-     *
-     * @return The pet's type.
-     */
-    public PetType getType() {
-        return type;
-    }
-
-    /**
-     * Sets the type of the pet.
-     *
-     * @param type The new type of the pet.
-     */
-    public void setType(PetType type) {
-        this.type = type;
-    }
-
-    /**
-     * Gets the age of the pet.
-     *
-     * @return The pet's age.
-     */
-    public int getAge() {
-        return age;
-    }
-
-    /**
-     * Sets the age of the pet.
-     *
-     * @param age The new age of the pet.
-     * @throws ValidateException
-     */
-    public void setAge(int age) throws ValidateException {
-        if (age <= 0 || age > 20) {
-            throw new ValidateException("Invalid value for age, please try again\n0 and 20 are the correct age values");
-        }
-        this.age = age;
+        super(name, type, age);
+        this.health = 50; // Initialize health to 0
+        this.happiness = 40; // Initialize happiness to 0
+        this.hungery = 20; // Initialize hunger to 0
+        this.thirst = 10; // initialize thrist
     }
 
     /**
@@ -149,7 +52,7 @@ public abstract class PetModel {
             value = 100; // Ensure health does not exceed 100
         } else if (value <= 0) {
             value = 0; // Ensure health does not go below 0
-            this.died = DeathBy.Disease; // Set death reason if health reaches 0
+            this.setDeathBy(DeathBy.Disease); // Set death reason if health reaches 0
         }
         this.health = value;
     }
@@ -168,14 +71,14 @@ public abstract class PetModel {
      * 
      * @param thirst
      */
-    public void setThirst(int value) {
-        if (value > 100) {
-            value = 100; // Ensure thirst does not exceed 100
-            this.died = DeathBy.Thirst; // Set death reason if thirst reaches 0
-        } else if (value <= 0) {
-            value = 0; // Ensure thirst does not go below 0
+    public void setThirst(int thirst) {
+        if (thirst > 100) {
+            thirst = 100; // Ensure thirst does not exceed 100
+            this.setDeathBy(DeathBy.Thirst); // Set death reason if thirst reaches 0
+        } else if (thirst <= 0) {
+            thirst = 0; // Ensure thirst does not go below 0
         }
-        this.thirst = value;
+        this.thirst = thirst;
     }
 
     /**
@@ -197,7 +100,7 @@ public abstract class PetModel {
             value = 100; // Ensure happiness does not exceed 100
         } else if (value <= 0) {
             value = 0; // Ensure happiness does not go below 0
-            this.died = DeathBy.Loneliness; // Set death reason if happiness reaches 0
+            this.setDeathBy(DeathBy.Loneliness); // Set death reason if happiness reaches 0
         }
         this.happiness = value;
     }
@@ -219,7 +122,7 @@ public abstract class PetModel {
     public void setHungery(int value) {
         if (value >= 100) {
             value = 100; // Ensure hunger does not exceed 100
-            this.died = DeathBy.Starvation; // Set death reason if hunger reaches 100
+            this.setDeathBy(DeathBy.Starvation); // Set death reason if hunger reaches 100
         } else if (value < 0) {
             value = 0; // Ensure hunger does not go below 0
         }
@@ -275,13 +178,6 @@ public abstract class PetModel {
     }
 
     /**
-     * Abstract method for pet's speech, to be implemented by subclasses.
-     *
-     * @return A string representing the pet's speech.
-     */
-    public abstract String speak();
-
-    /**
      * Simulates the passage of time, affecting the pet's hunger, happiness, and
      * health.
      */
@@ -299,9 +195,9 @@ public abstract class PetModel {
      */
     public String checkHealth() {
         if (isDead()) { // Check if the pet is dead
-            return String.format("%s is Dead from %s", this.name, this.died); // Return death reason
+            return String.format("%s is Dead from %s", this.getName(), this.getDeathBy()); // Return death reason
         } else if (this.health < 20) { // Check if health is below 20%
-            return String.format("%s is not healthy at %d%%", this.name, this.health); // Return health status
+            return String.format("%s is not healthy at %d%%", this.getName(), this.health); // Return health status
         }
 
         return this.toString(); // Return full pet details if healthy
@@ -314,9 +210,9 @@ public abstract class PetModel {
      */
     public String checkHappiness() {
         if (isDead()) { // Check if the pet is dead
-            return String.format("%s is Dead from %s", this.name, this.died); // Return death reason
+            return String.format("%s is Dead from %s", this.getName(), this.getDeathBy()); // Return death reason
         } else if (this.happiness < 20) { // Check if happiness is below 20%
-            return String.format("%s is not happy at %d%%", this.name, this.happiness); // Return happiness status
+            return String.format("%s is not happy at %d%%", this.getName(), this.happiness); // Return happiness status
         }
         return this.toString(); // Return full pet details if happy
     }
@@ -329,10 +225,12 @@ public abstract class PetModel {
     @Override
     public String toString() {
         if (isDead()) {
-            return "PetModel [id=" + id + ", name=" + name + ", type=" + type + ", age=" + age + "Died because of "
-                    + died + "]";
+            return "PetModel [id=" + getId() + ", name=" + this.getName() + ", type=" + getType() + ", age=" + getAge()
+                    + "deathBy because of "
+                    + getDeathBy() + "]";
         }
-        return "PetModel [id=" + id + ", name=" + name + ", type=" + type + ", age=" + age + ", health=" + health
+        return "PetModel [id=" + getId() + ", name=" + this.getName() + ", type=" + getType() + ", age=" + getAge()
+                + ", health=" + health
                 + "%, happiness=" + happiness + "%, hungery=" + hungery + "%, thirsty=" + thirst + "%]";
     }
 }

@@ -23,8 +23,16 @@ public enum DeathBy {
      * Represents death by disease.
      */
     Disease,
-/**
- * Represents death by Thirst.
- */
-    Thirst
+    /**
+     * Represents death by Thirst.
+     */
+    Thirst,
+    /**
+     * Robotic Pets with no oil
+     */
+    NoOil,
+    /**
+     * Robotic pets no power
+     */
+    NoPower
 }

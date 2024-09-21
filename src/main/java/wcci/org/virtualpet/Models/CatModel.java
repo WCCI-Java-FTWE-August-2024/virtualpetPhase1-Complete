@@ -1,11 +1,14 @@
 package wcci.org.virtualpet.Models;
 
+import jakarta.persistence.Entity;
 import wcci.org.virtualpet.Enums.*;
+
 
 /**
  * The CatModel class represents a specific type of pet, a cat, which extends the PetModel class.
  * It includes an implementation of the Speak method specific to cats.
  */
+@Entity
 public class CatModel extends PetModel {
 
     /**
@@ -32,4 +35,6 @@ public class CatModel extends PetModel {
         }
         return "Pur"; // Return purring sound for happy cats
     }
+
+    
 }

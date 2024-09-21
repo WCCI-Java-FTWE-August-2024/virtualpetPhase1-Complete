@@ -1,13 +1,15 @@
 package wcci.org.virtualpet.Models;
 
+import jakarta.persistence.Entity;
 import wcci.org.virtualpet.Enums.*;
 
 /**
  * The DogModel class represents a specific type of pet, a dog, which extends the PetModel class.
  * It includes an implementation of the Speak method specific to dogs.
  */
-public class DogModel extends PetModel {
-
+@Entity
+public class DogModel extends PetModel{
+ 
     /**
      * Constructor to initialize a new DogModel instance.
      *
@@ -41,4 +43,6 @@ public class DogModel extends PetModel {
             this.setThirst(getThirst() + 10); // Increase thirst
         }
     }
+
+   
 }
